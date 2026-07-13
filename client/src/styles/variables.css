@@ -1,0 +1,25 @@
+:root {
+  --fju-blue: #003366;
+  --fju-red: #e60000;
+  --fju-yellow: #ffcc00;
+
+  --white: #ffffff;
+  --black: #000000;
+
+  --gray-50: #f8f9fa;
+  --gray-100: #f4f4f4;
+  --gray-300: #dddddd;
+  --gray-600: #666666;
+  --gray-900: #222222;
+
+  --sidebar-width: 250px;
+
+  --transition: 0.3s ease;
+
+  --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  --radius-sm: 8px;
+  --radius-md: 15px;
+  --radius-full: 999px;
+}

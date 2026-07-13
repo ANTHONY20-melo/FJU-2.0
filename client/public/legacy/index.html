@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FJU - Força Jovem Universal</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.8.0/dist/css/splide-extension-video.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body class="layout-sidebar page-home"> <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="img/coordenador.webp" alt="Logo FJU" class="logo-sidebar">
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#inicio"><i class="fas fa-home"></i> <span>Início</span></a></li>
+                <li><a href="#projetos"><i class="fas fa-th-large"></i> <span>Projetos</span></a></li>
+                <li><a href="#horarios"><i class="fas fa-clock"></i> <span>Mapa</span></a></li>
+                <li><a href="#inscricao" class="btn-sidebar"><i class="fas fa-user-check"></i> <span>Fazer Parte</span></a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>FJU Oficial</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <img src="img/coordenador.webp" alt="FJU" class="logo-central">
+                <h1>Juntos e <span>Misturados.</span></h1>
+                <p>Descobre o teu valor e faz novos amigos no maior grupo jovem do país.</p>
+                <a href="#inscricao" class="btn-principal">Saber Mais</a>
+            </div>
+        </section>
+
+        <section id="projetos" class="section-container">
+            <h2 class="titulo-fju">Nossos Projetos</h2>
+            <div class="cards-container">
+                <a href="esporte.html" class="card"><i class="fas fa-volleyball-ball"></i><h3>Esporte</h3><p>Nascido para vencer.</p></a>
+                <a href="cultura.html" class="card"><i class="fas fa-icons"></i><h3>Cultura</h3><p>A arte de salvar.</p></a>
+                <a href="midia.html" class="card"><i class="fas fa-camera-retro"></i><h3>Mídia</h3><p>A voz da FJU.</p></a>
+                <a href="universitarios.html" class="card"><i class="fas fa-graduation-cap"></i><h3>Universitário</h3><p>Formando visionários.</p></a>
+                <a href="uniforca.html" class="card"><i class="fas fa-shield-alt"></i><h3>Uniforça</h3><p>Unidos somos mais fortes.</p></a>
+                <a href="atalaia.html" class="card"><i class="fas fa-bullhorn"></i><h3>Atalaia</h3><p>Somos todos atalaias.</p></a>
+                <a href="arcanjos.html" class="card"><i class="fas fa-user-shield"></i><h3>Arcanjos</h3><p>Guardiões da Fé.</p></a>
+                <a href="assistentes.html" class="card"><i class="fas fa-hands-holding"></i><h3>Assistentes</h3><p>Sempre prontas para ajudar.</p></a>
+            </div>
+        </section>
+
+        <section id="horarios" class="section-container bg-azul">
+            <div class="horarios-content">
+                <div class="horarios-text">
+                    <h2 class="text-white">Seja Bem-vindo à FJU</h2>
+                    <p class="text-white">Assista aos nossos melhores momentos e localize uma Universal!</p>
+                    
+                    <div class="splide" id="splide-videos" style="margin-top: 20px;">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide" data-splide-youtube="https://www.youtube.com/watch?v=PT8x7HKYVfA">
+                                    <img src="img/fju.jpg" alt="Amizade FJU">
+                                </li>
+                                <li class="splide__slide" data-splide-youtube="https://www.youtube.com/watch?v=RkjV-p_yTlU">
+                                    <img src="img/fju.jpg" alt="Evento FJU">
+                                </li>
+                                <li class="splide__slide" data-splide-youtube="https://www.youtube.com/watch?v=WLfralIFh7M">
+                                    <img src="img/fju.jpg" alt="EU SOU FORTE FJU">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mapa-container" style="margin-top: 30px;">
+                    <div id="map" style="height: 350px; width: 100%; border-radius: 15px; border: 2px solid white;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="inscricao" class="section-container bg-tricolor-fju">
+            <div class="form-box">
+                <h2 class="titulo-fju">Participar</h2>
+                <p style="margin-bottom: 15px; color: #333;">Preencha seus dados e entraremos em contato!</p>
+                <form id="formFJU">
+                    <input type="text" name="nome" placeholder="Nome Completo" required>
+                    <input type="tel" name="whatsapp" placeholder="Teu WhatsApp" required>
+                    <select name="estado" required>
+                        <option value="" disabled selected>Seu Estado</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="BA">Bahia</option>
+                        <option value="PT">Portugal / Outros</option>
+                    </select>
+                    <button type="submit" id="btnEnviar" class="btn-enviar-fju">Enviar Dados</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Força Jovem Universal - Juntos e Misturados.</p>
+        </footer>
+
+    </main>
+
+    <div id="modalAgradecimento" class="modal-sucesso">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 id="tituloAgradecimento">Obrigado!</h2>
+            <p id="mensagemAgradecimento">Recebemos seus dados. Em breve um de nossos voluntários entrará em contato.</p>
+            <button onclick="fecharModal()" class="btn-fechar">Entendido</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-video@0.8.0/dist/js/splide-extension-video.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
