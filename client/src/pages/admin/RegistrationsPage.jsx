@@ -3,14 +3,160 @@ import { api } from '../../services/api';
 
 const statuses = ['PENDING', 'CONTACTED', 'APPROVED', 'REJECTED'];
 const statusLabel = { PENDING: 'Pendente', CONTACTED: 'Em contato', APPROVED: 'Aprovada', REJECTED: 'Recusada' };
+
 export function RegistrationsPage() {
   const [filters, setFilters] = useState({ search: '', status: '', project: '', page: 1, limit: 20 });
-  const [projects, setProjects] = useState([]); const [result, setResult] = useState({ data: [], meta: null }); const [loading, setLoading] = useState(true); const [error, setError] = useState('');
-  const load = useCallback(async () => { setLoading(true); setError(''); try { const { data } = await api.get('/registrations', { params: filters }); setResult(data); } catch { setError('Não foi possível carregar as inscrições.'); } finally { setLoading(false); } }, [filters]);
-  useEffect(() => { load(); }, [load]);
-  useEffect(() => { api.get('/projects').then(({ data }) => setProjects(data.data)).catch(() => {}); }, []);
+  const [projects, setProjects] = useState([]);
+  const [result, setResult] = useState({ data: [], meta: null });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const { data } = await api.get('/registrations', { params: filters });
+      setResult(data);
+    } catch {
+      setError('Não foi possível carregar as inscrições.');
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    api.get('/projects').then(({ data }) => setProjects(data.data)).catch(() => {});
+  }, []);
+
   const change = (key, value) => setFilters(current => ({ ...current, [key]: value, page: key === 'page' ? value : 1 }));
-  async function updateStatus(id, status) { await api.patch(`/admin/registrations/${id}/status`, { status }); load(); }
-  async function download() { const { data } = await api.get('/admin/registrations/export', { params: filters, responseType: 'blob' }); const url = URL.createObjectURL(data); const link = Object.assign(document.createElement('a'), { href: url, download: 'inscricoes-fju.csv' }); link.click(); URL.revokeObjectURL(url); }
-  return <div className="admin-page"><div className="admin-page__heading"><div><p className="admin-kicker">Cadastros</p><h1>Inscrições</h1></div><button className="admin-primary" onClick={download}>Exportar CSV</button></div><div className="admin-filters"><input placeholder="Buscar por nome, e-mail ou telefone" value={filters.search} onChange={e => change('search', e.target.value)} /><select value={filters.status} onChange={e => change('status', e.target.value)}><option value="">Todos os status</option>{statuses.map(item => <option key={item} value={item}>{statusLabel[item]}</option>)}</select><select value={filters.project} onChange={e => change('project', e.target.value)}><option value="">Todos os projetos</option>{projects.map(item => <option key={item.id} value={item.slug}>{item.name}</option>)}</select></div>{error && <p className="admin-error">{error}</p>}<div className="admin-table-wrap"><table><thead><tr><th>Inscrito</th><th>Projeto</th><th>Contato</th><th>Data</th><th>Status</th></tr></thead><tbody>{loading ? <tr><td colSpan="5">Carregando…</td></tr> : result.data.length ? result.data.map(row => <tr key={row.id}><td><strong>{row.name}</strong><small>{row.city || 'Cidade não informada'}</small></td><td>{row.project.name}</td><td><small>{row.email || 'Sem e-mail'}<br />{row.phone}</small></td><td>{new Date(row.createdAt).toLocaleDateString('pt-BR')}</td><td><select className={`status status--${row.status}`} value={row.status} onChange={e => updateStatus(row.id, e.target.value)}>{statuses.map(item => <option key={item} value={item}>{statusLabel[item]}</option>)}</select></td></tr>) : <tr><td colSpan="5">Nenhuma inscrição encontrada.</td></tr>}</tbody></table></div>{result.meta && <div className="admin-pagination"><span>{result.meta.total} registro(s)</span><div><button disabled={result.meta.page === 1} onClick={() => change('page', result.meta.page - 1)}>Anterior</button><span>Página {result.meta.page} de {result.meta.pages}</span><button disabled={result.meta.page === result.meta.pages} onClick={() => change('page', result.meta.page + 1)}>Próxima</button></div></div>}</div>;
+
+  async function updateStatus(id, status) {
+    await api.patch(`/admin/registrations/${id}/status`, { status });
+    load();
+  }
+
+  async function download() {
+    const { data } = await api.get('/admin/registrations/export', { params: filters, responseType: 'blob' });
+    const url = URL.createObjectURL(data);
+    const link = Object.assign(document.createElement('a'), { href: url, download: 'inscricoes-fju.csv' });
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="admin-page">
+      <div className="admin-page__heading">
+        <div>
+          <p className="admin-kicker">Cadastros</p>
+          <h1>Inscrições</h1>
+        </div>
+        <button className="admin-primary" onClick={download}>
+          Exportar CSV
+        </button>
+      </div>
+
+      <div className="admin-filters">
+        <input
+          placeholder="Buscar por nome, e-mail ou telefone"
+          value={filters.search}
+          onChange={e => change('search', e.target.value)}
+        />
+        <select value={filters.status} onChange={e => change('status', e.target.value)}>
+          <option value="">Todos os status</option>
+          {statuses.map(item => (
+            <option key={item} value={item}>
+              {statusLabel[item]}
+            </option>
+          ))}
+        </select>
+        <select value={filters.project} onChange={e => change('project', e.target.value)}>
+          <option value="">Todos os projetos</option>
+          {projects.map(item => (
+            <option key={item.id} value={item.slug}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {error && <p className="admin-error">{error}</p>}
+
+      <div className="admin-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Inscrito</th>
+              <th>Projeto</th>
+              <th>Contato</th>
+              <th>Data</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan="5">Carregando…</td>
+              </tr>
+            ) : result.data.length ? (
+              result.data.map(row => (
+                <tr key={row.id}>
+                  <td>
+                    <strong>{row.name}</strong>
+                    <small>{row.city || 'Cidade não informada'}</small>
+                  </td>
+                  <td>{row.project.name}</td>
+                  <td>
+                    <small>
+                      {row.email || 'Sem e-mail'}
+                      <br />
+                      {row.phone}
+                    </small>
+                  </td>
+                  <td>{new Date(row.createdAt).toLocaleDateString('pt-BR')}</td>
+                  <td>
+                    <select
+                      className={`status status--${row.status}`}
+                      value={row.status}
+                      onChange={e => updateStatus(row.id, e.target.value)}
+                    >
+                      {statuses.map(item => (
+                        <option key={item} value={item}>
+                          {statusLabel[item]}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">Nenhuma inscrição encontrada.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {result.meta && (
+        <div className="admin-pagination">
+          <span>{result.meta.total} registro(s)</span>
+          <div>
+            <button disabled={result.meta.page === 1} onClick={() => change('page', result.meta.page - 1)}>
+              Anterior
+            </button>
+            <span>
+              Página {result.meta.page} de {result.meta.pages}
+            </span>
+            <button disabled={result.meta.page === result.meta.pages} onClick={() => change('page', result.meta.page + 1)}>
+              Próxima
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
