@@ -1,17 +1,4 @@
 {
-  "projects": [
-    {
-      "src": "client",
-      "use": "@verceljs/node"
-    },
-    {
-      "src": "server",
-      "use": "@verceljs/node"
-    }
-  ],
-  "buildCommand": "cd client && npm run build",
-  "outputDirectory": "client/dist",
-  "env": {
-    "VITE_API_URL": "@api_url"
-  }
+  "buildCommand": "cd client && npm install && npm run build",
+  "outputDirectory": "client/dist"
 }
