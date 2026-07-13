@@ -15,7 +15,7 @@ import { VolunteerPage } from '../pages/VolunteerPage';
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
       <MotionObserver />
       <Routes>
         <Route path="/" element={<Layout />}>
